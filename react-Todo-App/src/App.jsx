@@ -1,6 +1,8 @@
-import { useState } from 'react';
-import TodoInput from '../components/todo-input';
+import { useCallback, useState } from 'react';
 import './App.css'
+import TodoInput from '../components/todo-input';
+import TodoInput from '../components/todo-list';
+
 
 
 function App() {
@@ -13,7 +15,7 @@ function App() {
     }
   ]);
 
-  const handleAddTodo = () => {
+  const handleAddTodo = useCallback(() => {
     const todosArr = [...todos, {
       todo,
       id: Date.now(),
@@ -22,7 +24,30 @@ function App() {
 
     setTodos([...todosArr])
     setTodo("");
-  }
+  },[todo]);
+
+  const handleOnDelete= useCallback((id)=>{
+    // console.log("Id=>",id);
+    const filter= todos.filter((data)=> data.id !==id)
+    // console.log("filter",filter);
+    setTodos([...filter]);
+  },[todos]);
+
+  const handleOnToggleTodo = useCallback((id)=>{
+    console.log("id on clicking todo", id);
+    const todosArr=[...todos];
+    const todoInd = todosArr.findIndex((data)=data.id==id);
+    todosArr[todoInd].completed = !todosArr[todoInd].completed
+    setTodos([...todosArr]);
+    console.log("Todo Clicked>",todoInd);
+    console.log("todoArr>",todosArr);
+
+    
+  },[todos]);
+
+
+
+
   return (
     <div className='w-3/4 mx-auto'>
       <h1 className='font-bold text-3xl'>App Todo</h1>
@@ -30,6 +55,9 @@ function App() {
       <TodoInput value={todo} onChange={(e) => setTodo(e.target.value)} onClick={() => console.log("cicked on add todo button")} />
       <todo-list todos={todos} />
 
+      <todo-list
+      toggleTodo={handleOnToggleTodo}
+       todos={todos} onDelete={handleOnDelete}/>
     </div>
   );
 }
