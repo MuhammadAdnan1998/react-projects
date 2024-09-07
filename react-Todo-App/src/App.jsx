@@ -14,7 +14,7 @@ function App() {
       completed: false,
     }
   ]);
-
+  
   const handleAddTodo = useCallback(() => {
     const todosArr = [...todos, {
       todo,
